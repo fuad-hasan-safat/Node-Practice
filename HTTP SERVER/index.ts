@@ -5,7 +5,8 @@ books.set("1", {
   id: "1",
   title: "The Hound of the Baskervilles",
   author: "Conan Doyle, Arthur",
-});
+},
+);
 
 const router = new Router();
 router
