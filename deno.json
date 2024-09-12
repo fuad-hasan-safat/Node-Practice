@@ -1,5 +1,6 @@
 {
   "imports": {
+    "@dldc/serve": "jsr:@dldc/serve@^3.1.0",
     "@jlarky/csv-parse": "jsr:@jlarky/csv-parse@^0.1.2",
     "@std/csv": "jsr:@std/csv@^1.0.3",
     "@std/fs": "jsr:@std/fs@^1.0.3",
