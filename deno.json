@@ -1,0 +1,9 @@
+{
+  "imports": {
+    "@jlarky/csv-parse": "jsr:@jlarky/csv-parse@^0.1.2",
+    "@std/csv": "jsr:@std/csv@^1.0.3",
+    "@std/fs": "jsr:@std/fs@^1.0.3",
+    "@std/io": "jsr:@std/io@^0.224.7",
+    "@std/streams": "jsr:@std/streams@^1.0.4"
+  }
+}
