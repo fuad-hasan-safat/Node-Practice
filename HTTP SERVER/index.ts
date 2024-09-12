@@ -1,12 +1,28 @@
-const port = 8080;
+import { Application, Router } from "https://deno.land/x/oak/mod.ts";
 
-const handler = (request: Request): Response => {
-  const body = `Your user-agent is:\n\n${
-    request.headers.get("user-agent") ?? "Unknown"
-  }`;
+const books = new Map<string, any>();
+books.set("1", {
+  id: "1",
+  title: "The Hound of the Baskervilles",
+  author: "Conan Doyle, Arthur",
+});
 
-  return new Response(body, { status: 200 });
-};
+const router = new Router();
+router
+  .get("/", (context) => {
+    context.response.body = "Hello world!";
+  })
+  .get("/book", (context) => {
+    context.response.body = Array.from(books.values());
+  })
+  .get("/book/:id", (context) => {
+    if (books.has(context?.params?.id)) {
+      context.response.body = books.get(context.params.id);
+    }
+  });
 
-console.log(`HTTP server running. Access it at: http://localhost:8080/`);
-Deno.serve({ port }, handler);
+const app = new Application();
+app.use(router.routes());
+app.use(router.allowedMethods());
+
+await app.listen({ port: 8000 });
