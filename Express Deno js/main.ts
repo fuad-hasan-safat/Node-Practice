@@ -11,6 +11,7 @@ const logger = function (req: Request, _res: Response, next: NextFunction) {
 };
 
 app.use(logger);
+app.use(express.json());
 
 app.get("/", (_req: Request, res: Response): void => {
   res.send("Hello From DENO And Express");
@@ -18,6 +19,25 @@ app.get("/", (_req: Request, res: Response): void => {
 
 app.get("/users", (_req: Request, res: Response): void => {
   res.status(200).send(JSON.stringify(userdata));
+});
+
+app.post("/users", (req: Request, res: Response) => {
+  const existUser = userdata.find((user) => user.id === req.body.id);
+
+  if (existUser) {
+  } else {
+    const newUser = {
+      id: req.body.id,
+      name: req.body.name,
+      phone: req.body.phone,
+    };
+
+    console.log(req);
+
+    userdata.push(newUser);
+
+    res.status(200).send(JSON.stringify(userdata));
+  }
 });
 
 app.get("/users/:id", (req: Request, res: Response): void => {
