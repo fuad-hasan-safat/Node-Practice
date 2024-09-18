@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from "npm:express";
-import { userdata } from "./demo_data.ts";
+
+import { addNewUser, getUser, getUserbyId } from "./controllers/user.controller.ts";
+import { userdata } from "./models/user.model.ts";
 
 const app = express();
 const port: number = Number(Deno.env.get("App_PORT")) || 3000;
@@ -10,6 +12,33 @@ const logger = function (req: Request, _res: Response, next: NextFunction) {
   next();
 };
 
+const checkUserData = function (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const existUser = userdata.find((user) => user.id === req.body.id);
+  console.log(req.body);
+  if (existUser) {
+    res.status(400).json({
+      error: "This User Is Already exist",
+    });
+  } else {
+    if (req.body.id && req.body.name && req.body.phone) {
+      console.log("Calling Next...");
+      const phoneRegex = /^01\d{9}$/;
+      if (!phoneRegex.test(req.body.phone)) {
+        return res.status(400).json({ error: "Invalid phone number format" });
+      }
+      next();
+    } else {
+      res.status(400).json({
+        error: "Set all value properly",
+      });
+    }
+  }
+};
+
 app.use(logger);
 app.use(express.json());
 
@@ -17,38 +46,11 @@ app.get("/", (_req: Request, res: Response): void => {
   res.send("Hello From DENO And Express");
 });
 
-app.get("/users", (_req: Request, res: Response): void => {
-  res.status(200).send(JSON.stringify(userdata));
-});
+app.get("/users", getUser);
 
-app.post("/users", (req: Request, res: Response) => {
-  const existUser = userdata.find((user) => user.id === req.body.id);
+app.post("/users", checkUserData, addNewUser);
 
-  if (existUser) {
-  } else {
-    const newUser = {
-      id: req.body.id,
-      name: req.body.name,
-      phone: req.body.phone,
-    };
-
-    console.log(req);
-
-    userdata.push(newUser);
-
-    res.status(200).send(JSON.stringify(userdata));
-  }
-});
-
-app.get("/users/:id", (req: Request, res: Response): void => {
-  const id = req.params.id;
-  const user = userdata.find((data) => data.id === id);
-  if (user) {
-    res.status(200).send(JSON.stringify(user));
-  } else {
-    res.status(400).send("No User Found");
-  }
-});
+app.get("/users/:id", getUserbyId);
 
 app.listen(port, () => {
   console.log(`Listening on port ${port}`);
