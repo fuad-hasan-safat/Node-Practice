@@ -5,7 +5,9 @@ import { note } from './routes/note'
 const PORT = process.env.PORT || 8000
 
 const app = new Elysia()
-    
+app.use(swagger())
+
+
 
 app.listen(PORT)
 console.log(
